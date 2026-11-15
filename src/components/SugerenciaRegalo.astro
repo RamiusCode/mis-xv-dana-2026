@@ -1,0 +1,298 @@
+---
+// src/components/SugerenciaRegalo.astro
+// Sugerencia de regalo en rosa gold: título en Great Vibes, el mensaje en
+// Charm, "Lluvia de sobres" con su icono y "Transferencia" con el código QR.
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const titulo = "Sugerencia de regalo";
+const mensaje =
+    "El mejor regalo es tu presencia, pero si deseas tener un detalle conmigo, te dejo estas opciones.";
+const tituloSobres = "Lluvia de sobres";
+const tituloTransferencia = "Transferencia";
+// El QR sale de /public/imagenes/qr.png
+const qr = "/imagenes/qr.png";
+const textoDescargar = "Descargar";
+const textoAgrandar = "Agrandar";
+// ──────────────────────────────────────────────────────────────
+---
+
+<section id="regalo" class="relative w-full overflow-hidden">
+    <!-- Brillos sueltos en oro rosado -->
+    <span class="chispa chispa-1" aria-hidden="true"></span>
+    <span class="chispa chispa-2" aria-hidden="true"></span>
+    <span class="chispa chispa-3" aria-hidden="true"></span>
+
+    <div
+        id="bloque-regalo"
+        class="relative flex flex-col items-center px-7 pt-10 pb-8 text-center"
+    >
+        <h2 class="font-great-vibes titulo-regalo">{titulo}</h2>
+
+        <img
+            src="/imagenes/separador.png"
+            alt=""
+            width="1920"
+            height="198"
+            aria-hidden="true"
+            loading="lazy"
+            class="separador-regalo select-none"
+        />
+
+        <p class="mensaje-regalo">{mensaje}</p>
+
+        <!-- Lluvia de sobres: icono pintado en rosa gold con máscara -->
+        <h3 class="font-great-vibes rotulo-regalo">{tituloSobres}</h3>
+        <div class="figura-sobre" aria-hidden="true">
+            <span class="dibujo-sobre" style="--ic: url('/iconos/lluvia-sobre.png')"></span>
+        </div>
+
+        <!-- Transferencia: código QR -->
+        <h3 class="font-great-vibes rotulo-regalo rotulo-transferencia">{tituloTransferencia}</h3>
+        <img
+            src={qr}
+            alt="Código QR para la transferencia"
+            width="540"
+            height="540"
+            loading="lazy"
+            class="qr-regalo select-none"
+        />
+
+        <!-- Descargar y agrandar, en una sola línea -->
+        <div class="botones-qr">
+            <a href={qr} download="qr-transferencia.png" class="boton-qr">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 4v11"></path>
+                    <path d="M7 11l5 5 5-5"></path>
+                    <path d="M5 20h14"></path>
+                </svg>
+                <span>{textoDescargar}</span>
+            </a>
+            <button type="button" id="agrandar-qr" class="boton-qr">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 9V4h5"></path>
+                    <path d="M20 9V4h-5"></path>
+                    <path d="M4 15v5h5"></path>
+                    <path d="M20 15v5h-5"></path>
+                </svg>
+                <span>{textoAgrandar}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- QR a pantalla completa: se cierra tocando en cualquier lado -->
+    <div id="visor-qr" class="visor-qr" hidden>
+        <img src={qr} alt="Código QR para la transferencia, ampliado" class="visor-qr-img" />
+        <button type="button" id="cerrar-qr" class="cerrar-qr" aria-label="Cerrar">✕</button>
+    </div>
+</section>
+
+<style>
+    /* Los cqw de abajo se miden contra el ancho del bloque */
+    #bloque-regalo {
+        container-type: inline-size;
+        max-width: 430px;
+        margin: 0 auto;
+    }
+
+    /* Great Vibes: sin mayúsculas forzadas ni espaciado */
+    .titulo-regalo {
+        color: #c0905a;
+        font-size: min(12.5cqw, 3.1rem);
+        line-height: 1.25;
+    }
+
+    .separador-regalo {
+        width: 62cqw;
+        height: auto;
+        margin-top: 1cqw;
+    }
+
+    .mensaje-regalo {
+        max-width: 80cqw;
+        margin-top: 5cqw;
+        font-family: "Charm", cursive;
+        font-size: 1.25rem;
+        line-height: 1.75;
+        color: #9a6a5e;
+        text-wrap: balance;
+    }
+
+    /* Rótulos en Great Vibes dorado, como los de padres */
+    .rotulo-regalo {
+        margin-top: 8cqw;
+        color: #c0905a;
+        font-size: 1.9rem;
+        font-weight: 400;
+        line-height: 1.3;
+    }
+
+    .rotulo-transferencia {
+        margin-top: 9cqw;
+    }
+
+    /* El icono se pinta en rosa gold: el color sale del fondo y la forma,
+       de la máscara */
+    .figura-sobre {
+        display: flex;
+        justify-content: center;
+        margin-top: 2cqw;
+    }
+
+    .dibujo-sobre {
+        display: block;
+        width: 26cqw;
+        aspect-ratio: 1 / 1;
+        background-color: #b76e79;
+        -webkit-mask: var(--ic) center / contain no-repeat;
+        mask: var(--ic) center / contain no-repeat;
+    }
+
+    /* QR sobre blanco, con el mismo aro fino rosa gold de las muestras */
+    .qr-regalo {
+        width: 56cqw;
+        height: auto;
+        margin-top: 3cqw;
+        padding: 2.5cqw;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow:
+            0 0 0 1px rgba(183, 110, 121, 0.45),
+            0 8px 16px rgba(150, 80, 70, 0.22);
+    }
+
+    /* ── Botones del QR: una sola línea ─────────────────────── */
+    .botones-qr {
+        display: flex;
+        justify-content: center;
+        flex-wrap: nowrap;
+        gap: 3cqw;
+        margin-top: 5cqw;
+    }
+
+    .boton-qr {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45em;
+        padding: 0.55em 1.2em;
+        border: none;
+        border-radius: 9999px;
+        background: #b76e79;
+        color: #fff;
+        font-family: "Charm", cursive;
+        font-size: 1.1rem;
+        white-space: nowrap;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 6px 14px rgba(150, 80, 70, 0.25);
+    }
+
+    /* ── Visor a pantalla completa ──────────────────────────── */
+    .visor-qr {
+        position: fixed;
+        inset: 0;
+        z-index: 9600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        background: rgba(40, 18, 22, 0.92);
+    }
+
+    .visor-qr[hidden] {
+        display: none;
+    }
+
+    .visor-qr-img {
+        width: min(92vw, 520px);
+        height: auto;
+        padding: 14px;
+        border-radius: 14px;
+        background: #fff;
+    }
+
+    .cerrar-qr {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        border: none;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #b76e79;
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+
+    /* ── Chispas ────────────────────────────────────────────── */
+    .chispa {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #f3c9b8;
+        box-shadow: 0 0 6px 1px rgba(214, 150, 125, 0.8);
+        opacity: 0;
+        pointer-events: none;
+        animation: brillo-regalo 4.2s ease-in-out infinite;
+    }
+
+    .chispa-1 {
+        left: 12%;
+        top: 30%;
+        animation-delay: 0.3s;
+    }
+    .chispa-2 {
+        right: 10%;
+        top: 55%;
+        animation-delay: 1.7s;
+    }
+    .chispa-3 {
+        left: 16%;
+        bottom: 20%;
+        animation-delay: 3s;
+    }
+
+    @keyframes brillo-regalo {
+        0%,
+        100% {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .chispa {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    import { animarEntrada } from "../scripts/animaciones";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const bloque = document.getElementById("bloque-regalo");
+        if (!bloque) return;
+
+        animarEntrada(bloque.children, bloque, { stagger: 0.12 });
+
+        // Visor del QR a pantalla completa
+        const visor = document.getElementById("visor-qr");
+        const abrir = document.getElementById("agrandar-qr");
+        if (!visor || !abrir) return;
+        const cerrar = () => {
+            visor.hidden = true;
+        };
+        abrir.addEventListener("click", () => {
+            visor.hidden = false;
+        });
+        visor.addEventListener("click", cerrar);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") cerrar();
+        });
+    });
+</script>
